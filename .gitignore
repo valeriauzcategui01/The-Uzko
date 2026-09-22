@@ -1,0 +1,24 @@
+node_modules
+dist
+dist-ssr
+*.local
+.env
+.env.local
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+
+vite-dev.log
+.vercel
+.claude/
+
+# Tickets y adjuntos del entorno local. En produccion esto vive en Redis y en
+# Vercel Blob; aqui es un archivo para poder desarrollar sin contratar nada.
+.data/
+
+# El Excel original de la contabilidad de las casas: trae nombres, telefonos y
+# direcciones de los empleados. Se queda en el disco (OneDrive), nunca en git.
+# Lo derivado y ya anonimizado va en api/_data/gastos.json.
+2026/**
+20[0-9][0-9]/**
+~$*.xlsx
