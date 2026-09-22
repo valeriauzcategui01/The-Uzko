@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto'
 import { obtener, guardar } from './store.js'
 import { puedeEscribir } from './auth.js'
 
-// LAS CUENTAS Y TARJETAS de Valerio: de dónde sale (o a dónde entra) el
+// LAS CUENTAS Y TARJETAS de Valeria: de dónde sale (o a dónde entra) el
 // dinero de cada movimiento.
 //
 // Son pocas y cambian poco, así que viven todas en UNA clave del almacén, como

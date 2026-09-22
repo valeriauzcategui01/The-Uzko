@@ -3,7 +3,7 @@ import { puedeEscribir } from './auth.js'
 import { CATEGORIA_POR_ID } from '../../src/lib/categorias.js'
 import { monto } from './numeros.js'
 
-// EL PRESUPUESTO DEL MES: cuánto quiere gastar Valerio en cada categoría.
+// EL PRESUPUESTO DEL MES: cuánto quiere gastar Valeria en cada categoría.
 //
 // Un presupuesto por mes, guardado como un mapa categoría → euros. Se guarda
 // POR MES y no como "el presupuesto" a secas porque los meses no son iguales

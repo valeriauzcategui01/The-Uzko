@@ -31,7 +31,7 @@ export default function App() {
 
 // EL "COMPARTIR A UZKO" DEL TELÉFONO.
 //
-// El manifest declara un share_target: cuando Valerio comparte la
+// El manifest declara un share_target: cuando Valeria comparte la
 // notificación del banco con la app, Android la abre con el texto en la URL
 // (?share_text=...). Ese texto se manda a la bandeja —el mismo camino que el
 // webhook— y la app abre ahí, con el mensaje ya leído y listo para

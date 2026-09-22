@@ -7,7 +7,7 @@ import { monto, bsAEuros, usdAEuros } from './numeros.js'
 import { diaCaracas, tasaActual } from './tasa.js'
 import { esCuentaValida } from './cuentas.js'
 
-// EL MOVIMIENTO: un gasto o un ingreso de Valerio, con su recibo al lado.
+// EL MOVIMIENTO: un gasto o un ingreso de Valeria, con su recibo al lado.
 //
 // Es el motor de tickets de Sosa Baserva adaptado a finanzas personales. La
 // diferencia de fondo: allá un ticket nacía pendiente ("hay que pagarle al

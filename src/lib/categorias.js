@@ -1,4 +1,4 @@
-// Las categorías de los gastos de Valerio, y las reglas que clasifican solas.
+// Las categorías de los gastos de Valeria, y las reglas que clasifican solas.
 //
 // UNA SOLA LISTA para los tres que la necesitan: el formulario para ofrecerla,
 // el servidor para validar lo que llega (la importa vía api/_lib), y el

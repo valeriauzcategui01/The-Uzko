@@ -1,6 +1,6 @@
 # Uzko · Finanzas personales
 
-App de finanzas personales de **Valerio Escategui**, marca **The Uzko**
+App de finanzas personales de **Valeria Escategui**, marca **The Uzko**
 (amarillo `#ffc20e`, negro y blanco, estilo sticker — el logo vive en
 `public/logo-uzko.jpg` y de él salen los íconos de la PWA).
 
@@ -38,7 +38,7 @@ Upstash Redis (datos) · Vercel Blob privado (recibos).
 
 ```bash
 npm install
-npm run dev      # http://localhost:5174 · acceso abierto, datos en .data/
+npm run dev      # http://localhost:5175 · acceso abierto, datos en .data/
 npm run build
 ```
 
@@ -58,7 +58,7 @@ abierto (entras como administrador).
 
 ## Conectar el teléfono (auto-registro de gastos)
 
-En el teléfono de Valerio, **MacroDroid** (gratis en Google Play):
+En el teléfono de Valeria, **MacroDroid** (gratis en Google Play):
 
 - **Disparador**: SMS recibido → del número/remitente del banco.
 - **Acción**: Petición HTTP → `POST`

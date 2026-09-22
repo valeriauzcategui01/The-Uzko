@@ -6,7 +6,7 @@ import { categorizar } from '../../src/lib/categorias.js'
 
 // LA BANDEJA DE ENTRADA: los mensajes del banco que llegaron solos.
 //
-// El teléfono de Valerio reenvía los SMS del banco a /api/inbox (vía un
+// El teléfono de Valeria reenvía los SMS del banco a /api/inbox (vía un
 // automatizador tipo MacroDroid) y aquí se guardan ya leídos: monto, moneda,
 // comercio y una categoría propuesta. NO se convierten en gasto directamente
 // —un parser que se equivoca y registra solo es un mes entero que miente—:

@@ -10,7 +10,7 @@ import { CategoriaChip } from '../movimientos/piezas'
 
 // LA BANDEJA DE ENTRADA: los mensajes del banco que llegaron solos.
 //
-// Cada compra que Valerio hace con la tarjeta le genera un SMS, y ese SMS
+// Cada compra que Valeria hace con la tarjeta le genera un SMS, y ese SMS
 // llega aquí por el webhook (MacroDroid en su teléfono) o por "Compartir a
 // Uzko". El parser ya leyó monto, moneda y comercio; a ella le queda UN
 // toque: confirmar, y el gasto entra con todo y categoría. O descartar, si

@@ -2,8 +2,8 @@ import { createHmac, createHash, timingSafeEqual } from 'node:crypto'
 
 // EL ACCESO.
 //
-// HOY: una sola contraseña (SITE_PASSWORD en Vercel). Valerio la escribe y
-// entra como "Valerio", administradora de todo. Es lo que Eduardo pidió el
+// HOY: una sola contraseña (SITE_PASSWORD en Vercel). Valeria la escribe y
+// entra como "Valeria", administradora de todo. Es lo que Eduardo pidió el
 // 22/09/2026: sin usuarios por ahora.
 //
 // El sistema de personas (variable USUARIOS, heredado de Sosa Baserva) sigue
@@ -76,7 +76,7 @@ function parseUsuarios() {
 }
 
 // El usuario de compatibilidad: existe solo cuando no hay USUARIOS todavía.
-const USUARIO_UNICO = { id: 'uzko', nombre: 'Valerio', rol: 'admin' }
+const USUARIO_UNICO = { id: 'uzko', nombre: 'Valeria', rol: 'admin' }
 const USUARIO_DEV = { id: 'dev', nombre: 'Desarrollo', rol: 'admin' }
 
 // Lista para la pantalla de entrada. NUNCA incluye el hash.

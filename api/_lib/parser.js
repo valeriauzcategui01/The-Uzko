@@ -1,6 +1,6 @@
 // LEER EL MENSAJE DEL BANCO.
 //
-// Cuando Valerio paga con la tarjeta, el banco le manda un SMS o una
+// Cuando Valeria paga con la tarjeta, el banco le manda un SMS o una
 // notificación: "Compra aprobada por EUR 23,50 en MERCADONA VALENCIA el
 // 22/09". Ese texto llega aquí por dos caminos —el webhook /api/inbox (un
 // automatizador del teléfono lo reenvía solo) y el "Compartir a Uzko" del

@@ -5,7 +5,7 @@ import { modoAlmacen } from './_lib/store.js'
 // EL WEBHOOK DEL TELÉFONO.
 //
 // Aquí llegan los SMS del banco, reenviados solos por un automatizador
-// (MacroDroid, Tasker, Automate…) configurado en el teléfono de Valerio:
+// (MacroDroid, Tasker, Automate…) configurado en el teléfono de Valeria:
 // "cuando llegue un SMS del número del banco → POST a esta URL". La app no
 // puede leer los SMS por sí misma —Android no le da ese permiso a una web—,
 // así que este endpoint es el puente.
