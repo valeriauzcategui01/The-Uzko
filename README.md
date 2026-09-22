@@ -51,7 +51,7 @@ abierto (entras como administrador).
 1. Importar el repo en Vercel (framework: Vite; el `vercel.json` ya lo dice).
 2. **Storage → Upstash Redis** y **Storage → Blob**: conectarlos al proyecto.
 3. Variables de entorno (ver `.env.example`):
-   - `USUARIOS` — generar cada entrada con `npm run clave -- valerio "Valerio" admin`
+   - `SITE_PASSWORD` — la contraseña de la app (una sola; sin usuarios por ahora)
    - `INBOX_TOKEN` — el secreto del webhook de SMS (sin él, apagado)
    - `SESSION_SECRET` — opcional, firma la cookie
 4. Volver a desplegar para que tome las variables.

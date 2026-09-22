@@ -1,28 +1,28 @@
 import { createHmac, createHash, timingSafeEqual } from 'node:crypto'
 
-// ACCESO POR PERSONA.
+// EL ACCESO.
 //
-// Uzko es la app de finanzas de Valerio: casi siempre va a entrar ella sola,
-// pero el sistema de personas se queda —heredado de Sosa Baserva— porque cada
-// gasto firma quién lo registró, y porque permite darle acceso de solo-mirar
-// a alguien de confianza sin darle la llave de escribir.
+// HOY: una sola contraseña (SITE_PASSWORD en Vercel). Valerio la escribe y
+// entra como "Valerio", administradora de todo. Es lo que Eduardo pidió el
+// 22/09/2026: sin usuarios por ahora.
+//
+// El sistema de personas (variable USUARIOS, heredado de Sosa Baserva) sigue
+// aquí abajo, dormido, porque cada gasto firma quién lo registró y el día que
+// haga falta un segundo acceso —o uno de solo-mirar— basta con poner la
+// variable, sin tocar código. Mientras USUARIOS no exista, manda
+// SITE_PASSWORD.
 //
 // Config (Vercel → Environment Variables):
 //
-//   USUARIOS  -> JSON con la gente que entra. Genera cada entrada con
-//                `npm run clave` y pega el resultado aquí:
-//                [{"id":"valerio","nombre":"Valerio","rol":"admin","hash":"…"}]
+//   SITE_PASSWORD  -> LA contraseña de la app.
 //
 //   SESSION_SECRET -> (opcional) firma la cookie. Cambiarlo cierra todas las
-//                     sesiones abiertas sin tener que cambiar las claves.
+//                     sesiones abiertas sin tener que cambiar la contraseña.
 //
-//   SITE_PASSWORD  -> contraseña única de respaldo. Si USUARIOS no está
-//                     puesta, el sitio funciona con esta; en cuanto exista
-//                     USUARIOS, manda USUARIOS.
-//
-// ROLES
-//   admin     todo: registra, edita, anula, maneja cuentas, presupuesto y tasa
-//   invitado  solo mira: ve el resumen y los movimientos, no toca nada
+//   USUARIOS       -> (dormida) JSON de personas con hash sha256(id:clave);
+//                     al ponerla, la pantalla de entrada pasa sola al modo
+//                     de elegir persona. Roles: admin (todo) | invitado
+//                     (solo mira).
 
 const COOKIE = 'uzko_auth'
 const SECRET = process.env.SESSION_SECRET || process.env.SITE_PASSWORD || 'dev'
