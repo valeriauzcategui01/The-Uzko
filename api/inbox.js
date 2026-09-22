@@ -60,18 +60,26 @@ export default async function handler(req, res) {
   for await (const chunk of req) chunks.push(chunk)
   const raw = Buffer.concat(chunks).toString('utf8')
 
+  // Además del texto libre, se aceptan campos YA estructurados: `comercio`,
+  // `monto` y `moneda`. Es el camino del iPhone de Valeria — la
+  // automatización "Transacción" de Atajos recibe de Wallet esas variables
+  // cada vez que paga con Apple Pay, así que aquí llegan exactas y el parser
+  // no tiene que adivinar nada. Cuerpo típico del atajo:
+  //   {"origen":"applepay","comercio":"Comercio","monto":"Importe","moneda":"EUR"}
   let texto = ''
   let origen = 'sms'
+  let extra = {}
   try {
     const j = JSON.parse(raw)
     texto = String(j?.texto ?? j?.text ?? j?.message ?? j?.body ?? '')
-    if (j?.origen === 'correo' || j?.origen === 'compartir') origen = j.origen
+    if (['correo', 'compartir', 'applepay'].includes(j?.origen)) origen = j.origen
+    extra = { comercio: j?.comercio, monto: j?.monto, moneda: j?.moneda }
   } catch {
     texto = raw
   }
 
   try {
-    const entrada = await recibir(texto, origen)
+    const entrada = await recibir(texto, origen, extra)
     // Respuesta mínima: el automatizador no la lee, pero sirve para probar
     // el webhook a mano con curl y ver qué entendió el parser.
     res.status(200).json({ ok: true, id: entrada.id, parse: entrada.parse })

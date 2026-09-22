@@ -166,7 +166,8 @@ function EntradaFila({ entrada, puedeEscribir, onConfirmar, onDescartar }) {
         </div>
         <p className="entrada-texto">{entrada.texto}</p>
         <span className="dato-pie">
-          {desde(entrada.recibidoEl)} · llegó por {entrada.origen === 'compartir' ? 'compartir' : entrada.origen}
+          {desde(entrada.recibidoEl)} · llegó por{' '}
+          {entrada.origen === 'applepay' ? 'Apple Pay' : entrada.origen === 'compartir' ? 'compartir' : entrada.origen}
           {entendio && entrada.categoriaPropuesta ? ` · propuesta: ${categoriaLabel(entrada.categoriaPropuesta)}` : ''}
         </span>
       </div>
@@ -186,19 +187,52 @@ function EntradaFila({ entrada, puedeEscribir, onConfirmar, onDescartar }) {
 
 // La guía para conectar el teléfono, siempre a la vista al final de la
 // bandeja: es lo que hay que configurar UNA vez para que esto se llene solo.
+// Dos caminos según el teléfono; el de iPhone va primero porque es el de
+// Valeria y porque es el mejor: Wallet entrega comercio y monto exactos,
+// sin parsear ningún texto.
 function ComoConectar() {
-  const [abierta, setAbierta] = useState(false)
+  const [abierta, setAbierta] = useState(null) // 'iphone' | 'android' | null
   return (
     <Card
       title="Conectar el teléfono"
-      subtitle="Para que los SMS del banco lleguen solos a esta bandeja"
+      subtitle="Para que cada pago llegue solo a esta bandeja"
       action={
-        <button className="btn btn-ghost btn-sm" onClick={() => setAbierta((v) => !v)}>
-          {abierta ? 'Esconder' : 'Ver los pasos'}
-        </button>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button className="btn btn-ghost btn-sm" onClick={() => setAbierta(abierta === 'iphone' ? null : 'iphone')}>
+             iPhone · Apple Pay
+          </button>
+          <button className="btn btn-ghost btn-sm" onClick={() => setAbierta(abierta === 'android' ? null : 'android')}>
+            Android · SMS
+          </button>
+        </div>
       }
     >
-      {abierta && (
+      {abierta === 'iphone' && (
+        <ol className="guia-pasos">
+          <li>
+            Abre la app <strong>Atajos</strong> del iPhone → pestaña <strong>Automatización</strong>{' '}
+            → <strong>Nueva automatización</strong> → busca <strong>"Transacción"</strong>.
+          </li>
+          <li>
+            Elige la(s) <strong>tarjeta(s)</strong> de Wallet, marca <strong>"Ejecutar
+            inmediatamente"</strong> y sigue.
+          </li>
+          <li>
+            Añade la acción <strong>"Obtener contenido de URL"</strong> con esta URL:
+            <code className="guia-url">https://the-uzko.vercel.app/api/inbox?token=TU_TOKEN</code>
+          </li>
+          <li>
+            Método <strong>POST</strong>, cuerpo <strong>JSON</strong>, con estos campos (los valores
+            son las variables mágicas que ofrece la transacción):
+            <code className="guia-url">{'origen: applepay · comercio: [Comercio] · monto: [Importe] · moneda: EUR'}</code>
+          </li>
+          <li>
+            Listo: cada pago con Apple Pay aparece aquí al instante, con el comercio y el monto
+            exactos que dio Wallet — sin leer notificaciones ni adivinar nada.
+          </li>
+        </ol>
+      )}
+      {abierta === 'android' && (
         <ol className="guia-pasos">
           <li>
             Instala <strong>MacroDroid</strong> (gratis, en Google Play) en el teléfono donde llegan
@@ -210,7 +244,7 @@ function ComoConectar() {
           </li>
           <li>
             <strong>Acción:</strong> "Petición HTTP" → método <strong>POST</strong>, URL:
-            <code className="guia-url">https://TU-APP.vercel.app/api/inbox?token=TU_TOKEN</code>
+            <code className="guia-url">https://the-uzko.vercel.app/api/inbox?token=TU_TOKEN</code>
           </li>
           <li>
             En el cuerpo (Content-Type <code>application/json</code>) pon:
@@ -219,11 +253,6 @@ function ComoConectar() {
           <li>
             El <strong>token</strong> es la variable <code>INBOX_TOKEN</code> configurada en Vercel:
             sin él, el webhook no acepta nada.
-          </li>
-          <li>
-            Listo: cada SMS del banco aparece aquí al instante, leído y con su categoría propuesta.
-            También puedes <strong>compartir</strong> cualquier notificación o mensaje con la app
-            Uzko desde el menú compartir de Android.
           </li>
         </ol>
       )}

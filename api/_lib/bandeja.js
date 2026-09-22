@@ -31,15 +31,46 @@ class ErrorBandeja extends Error {
 }
 export { ErrorBandeja }
 
-export async function recibir(texto, origen = 'sms') {
-  const limpio = String(texto ?? '').trim().slice(0, 2000)
-  if (!limpio) throw new ErrorBandeja('El mensaje llegó vacío')
+// La moneda puede llegar como símbolo ("€"), código ("EUR") o nombre: los
+// Atajos de Apple mandan lo que Wallet les dé, y no vale la pena que un
+// "EUR" en mayúsculas deje la entrada sin moneda.
+function normalizarMoneda(v) {
+  const s = String(v ?? '').trim().toLowerCase()
+  if (!s) return null
+  if (s === '€' || s.startsWith('eur')) return 'eur'
+  if (s === '$' || s === 'us$' || s.startsWith('usd') || s.startsWith('dolar') || s.startsWith('dólar')) return 'usd'
+  if (s.startsWith('bs') || s === 'ves' || s.startsWith('boliv')) return 'bs'
+  return null
+}
 
-  const parse = parsearMensaje(limpio)
+// DOS FORMAS DE LLEGAR.
+//
+// `extra` trae los campos ya estructurados cuando el remitente los conoce:
+// la automatización "Transacción" de Atajos (iPhone) recibe de Wallet el
+// comercio y el monto como variables, así que no hay nada que adivinar. En
+// ese caso el parser solo rellena lo que falte. Sin `extra` (un SMS de
+// MacroDroid, algo compartido), el texto libre pasa por el parser como
+// siempre. Lo estructurado manda sobre lo parseado: viene de la fuente.
+export async function recibir(texto, origen = 'sms', extra = {}) {
+  const limpio = String(texto ?? '').trim().slice(0, 2000)
+  const montoExtra = String(extra?.monto ?? '').trim().slice(0, 30) || null
+  const comercioExtra = String(extra?.comercio ?? '').trim().slice(0, 80) || null
+  if (!limpio && !montoExtra && !comercioExtra) throw new ErrorBandeja('El mensaje llegó vacío')
+
+  const parseado = parsearMensaje(limpio)
+  const parse = {
+    ...parseado,
+    monto: montoExtra ?? parseado.monto,
+    moneda: normalizarMoneda(extra?.moneda) ?? parseado.moneda,
+    comercio: comercioExtra ?? parseado.comercio,
+  }
+
   const entrada = {
     id: randomUUID(),
-    texto: limpio,
-    origen: ['sms', 'compartir', 'correo'].includes(origen) ? origen : 'sms',
+    // Si no vino texto (un atajo que solo manda comercio y monto), se arma
+    // una línea legible: es lo que la persona ve en la bandeja.
+    texto: limpio || `${comercioExtra ?? 'Pago'} · ${montoExtra ?? ''} ${extra?.moneda ?? ''}`.trim(),
+    origen: ['sms', 'compartir', 'correo', 'applepay'].includes(origen) ? origen : 'sms',
     parse,
     // La categoría se propone por el comercio ("MERCADONA" → mercado), con
     // las mismas reglas que usa el buscador. Es una propuesta: se confirma o

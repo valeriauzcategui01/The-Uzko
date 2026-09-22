@@ -58,15 +58,26 @@ abierto (entras como administrador).
 
 ## Conectar el teléfono (auto-registro de gastos)
 
-En el teléfono de Valeria, **MacroDroid** (gratis en Google Play):
+**iPhone (el de Valeria) — Apple Pay vía Atajos.** La automatización
+**"Transacción"** de la app Atajos se dispara sola con cada pago de Apple Pay
+y entrega el comercio y el monto como variables de Wallet — datos exactos,
+sin parsear texto:
+
+- Atajos → Automatización → **Transacción** → elegir tarjeta(s) → "Ejecutar
+  inmediatamente".
+- Acción **"Obtener contenido de URL"** → `POST`
+  `https://<app>.vercel.app/api/inbox?token=<INBOX_TOKEN>` con cuerpo JSON:
+  `{"origen":"applepay","comercio":<Comercio>,"monto":<Importe>,"moneda":"EUR"}`.
+
+**Android — SMS vía MacroDroid** (gratis en Google Play):
 
 - **Disparador**: SMS recibido → del número/remitente del banco.
-- **Acción**: Petición HTTP → `POST`
-  `https://<app>.vercel.app/api/inbox?token=<INBOX_TOKEN>` con Content-Type
-  `application/json` y cuerpo `{"texto":"[sms_message]","origen":"sms"}`.
+- **Acción**: Petición HTTP → `POST` a la misma URL con cuerpo
+  `{"texto":"[sms_message]","origen":"sms"}`.
 
-Cada compra aparece al instante en la **Bandeja** de la app, leída y con
-categoría propuesta. La misma guía está dentro de la app, en la vista Bandeja.
+Cada pago aparece al instante en la **Bandeja** de la app, leído y con
+categoría propuesta; nada se registra sin confirmar. La misma guía está
+dentro de la app, en la vista Bandeja.
 
 ## Decisiones que conviene conocer
 
