@@ -1349,3 +1349,55 @@ th .punto { margin-right: 5px; }
   .entrada-acciones { flex-direction: row; width: 100%; }
   .entrada-acciones .btn { flex: 1; justify-content: center; }
 }
+
+
+/* ================================================================
+   IPHONE / PWA - la app se usa sobre todo en el telefono de Valeria
+   ================================================================ */
+
+/* iOS hace zoom automatico al enfocar cualquier campo con letra menor de
+   16px, y el zoom desencuadra la pantalla entera. En telefono los campos
+   suben a 16 y el zoom no se dispara. */
+@media (max-width: 920px) {
+  select, input, textarea,
+  .campo input, .campo textarea, .campo select,
+  .buscador-texto, .buscador-dia,
+  .login-card input, .plan-input input, .barra-tasa-forma input {
+    font-size: 16px;
+  }
+  .plan-input input { width: 110px; }
+
+  /* El modal aprovecha el ancho entero y sus botones crecen al dedo. */
+  .modal-fondo { padding: 14px 10px calc(16px + env(safe-area-inset-bottom, 0px)); }
+  .modal-head { padding: 16px 16px 12px; }
+  .modal-cuerpo { padding: 16px 16px 18px; }
+  .campo-fila { grid-template-columns: 1fr; }
+  .modal-pie .btn, .panel-pie .btn { flex: 1; justify-content: center; }
+
+  /* Los filtros en una sola linea deslizable: envueltos, los chips de
+     estado mas los de cuentas ocupaban media pantalla antes de la lista. */
+  .filtros { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; gap: 10px; }
+  .filtros::-webkit-scrollbar { display: none; }
+  .filtros-grupo { flex-wrap: nowrap; }
+  .filtro { white-space: nowrap; }
+
+  /* La fila de un movimiento: el monto no se deja empujar fuera. */
+  .ticket-derecha { flex: none; }
+}
+
+/* La app instalada (standalone) vive bajo el notch y sobre la barra de
+   inicio: los bordes seguros los dicta el sistema, no un numero fijo. */
+.header { padding-top: calc(16px + env(safe-area-inset-top, 0px)); }
+.sidebar { padding-top: calc(20px + env(safe-area-inset-top, 0px)); }
+.app-content { padding-bottom: calc(48px + env(safe-area-inset-bottom, 0px)); }
+@media (max-width: 920px) {
+  .header { padding-top: calc(14px + env(safe-area-inset-top, 0px)); }
+}
+
+/* 100vh en Safari movil incluye la barra del navegador y deja el login
+   cortado; dvh es la altura visible de verdad. */
+.login-screen {
+  min-height: 100dvh;
+  padding-top: calc(32px + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px));
+}

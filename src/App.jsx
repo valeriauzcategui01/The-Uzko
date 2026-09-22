@@ -47,7 +47,7 @@ function leerCompartido() {
 }
 
 function Shell() {
-  const { movimientos, bandejaNuevas, setBandejaNuevas, mes } = useApp()
+  const { movimientos, bandejaNuevas, setBandejaNuevas, mes, demo } = useApp()
   const [tab, setTab] = useState('resumen')
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
   const [collapsed, setCollapsed] = useState(() => {
@@ -137,6 +137,19 @@ function Shell() {
           conMes={tab === 'resumen' || tab === 'movimientos' || tab === 'presupuesto'}
         />
         <main className="app-content">
+          {/* El modo de prueba se dice SIEMPRE y arriba del todo: registrar
+              media quincena creyendo que se guarda sería el peor estreno
+              posible. Desaparece solo al conectar Redis en Vercel. */}
+          {demo && (
+            <div className="aviso" role="status">
+              <span className="aviso-icono" aria-hidden>🧪</span>
+              <span>
+                <strong>Modo de prueba.</strong> Aún no hay base de datos conectada: lo que
+                registres vive solo en este navegador, para que pruebes la app. Al conectar
+                Redis en Vercel, todo se guarda de verdad.
+              </span>
+            </div>
+          )}
           {tab === 'resumen' && <Resumen onNavegar={setTab} />}
           {tab === 'movimientos' && <Movimientos />}
           {tab === 'presupuesto' && <Presupuesto />}
