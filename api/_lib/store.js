@@ -13,6 +13,8 @@ import { fileURLToPath } from 'node:url'
 //   producción  Redis (Upstash, el que Vercel conecta desde su marketplace),
 //               hablado por su API REST con `fetch` pelado. Sin SDK: son
 //               cuatro comandos y el paquete pesaba más que esto.
+//               O cualquier Redis por REDIS_URL (el "Redis" gratis que Vercel
+//               crea desde Storage), hablado por TCP con el cliente oficial.
 //
 //   local       un JSON en .data/. `npm run dev` funciona completo sin
 //               contratar nada ni tener internet, y como es un archivo se
@@ -24,7 +26,10 @@ import { fileURLToPath } from 'node:url'
 const URL_REDIS = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL
 const TOKEN_REDIS = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN
 
-export const hayRedis = Boolean(URL_REDIS && TOKEN_REDIS)
+const REDIS_TCP = process.env.REDIS_URL || process.env.KV_URL
+
+const hayRest = Boolean(URL_REDIS && TOKEN_REDIS)
+export const hayRedis = hayRest || Boolean(REDIS_TCP)
 
 // El modo en que está corriendo, para poder avisarlo en la interfaz.
 export function modoAlmacen() {
@@ -34,7 +39,27 @@ export function modoAlmacen() {
 
 // ── Redis por REST ──────────────────────────────────────────────────────────
 
+// La conexión TCP se abre una vez y se reusa entre peticiones mientras la
+// función siga caliente.
+let clienteTcp = null
+async function tcp() {
+  if (!clienteTcp) {
+    const { createClient } = await import('redis')
+    const c = createClient({ url: REDIS_TCP })
+    c.on('error', () => {}) // se reintenta solo; el error real sale en el comando
+    clienteTcp = c.connect().then(() => c).catch((e) => {
+      clienteTcp = null
+      throw e
+    })
+  }
+  return clienteTcp
+}
+
 async function cmd(...partes) {
+  if (!hayRest) {
+    const c = await tcp()
+    return c.sendCommand(partes.map(String))
+  }
   const r = await fetch(URL_REDIS, {
     method: 'POST',
     headers: { Authorization: `Bearer ${TOKEN_REDIS}`, 'Content-Type': 'application/json' },
