@@ -1,4 +1,4 @@
-import { autenticar, makeToken, cookieHeader, modoAcceso } from './_lib/auth.js'
+import { autenticar, makeToken, cookieHeader, modoAcceso, usuarioDe } from './_lib/auth.js'
 import { leerBody } from './_lib/body.js'
 
 export default async function handler(req, res) {
@@ -8,11 +8,9 @@ export default async function handler(req, res) {
   }
 
   const modo = modoAcceso()
-  if (modo === 'abierto' && process.env.VERCEL) {
-    res.status(503).json({
-      ok: false,
-      error: 'El sitio todavía no tiene acceso configurado. Falta la variable USUARIOS (o SITE_PASSWORD) en Vercel y volver a desplegar.',
-    })
+  if (modo === 'abierto') {
+    // No hay clave que comprobar: se entra directo.
+    res.status(200).json({ ok: true, usuario: usuarioDe(req) })
     return
   }
 

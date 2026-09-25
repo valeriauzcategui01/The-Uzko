@@ -133,7 +133,9 @@ export function PasswordGate({ children }) {
 
 // Botón de salir, en el header.
 export function LogoutButton() {
-  const { usuario, salir } = useSesion()
+  const { usuario, salir, modo } = useSesion()
+  // Sin contraseña no hay de qué salir: al recargar se vuelve a entrar solo.
+  if (modo === 'abierto') return null
   return (
     <button className="btn btn-ghost btn-sm" onClick={salir} title={usuario ? `Salir de la sesión de ${usuario.nombre}` : 'Cerrar sesión'}>
       Salir

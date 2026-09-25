@@ -152,9 +152,10 @@ export function usuarioDe(req) {
   const modo = modoAcceso()
 
   if (modo === 'abierto') {
-    // En local se entra sin clave para poder previsualizar. En producción
-    // esto no ocurre: sin configuración, `requireUser` deniega.
-    return process.env.VERCEL ? null : USUARIO_DEV
+    // Sin SITE_PASSWORD se entra directo, también en producción: Valeria
+    // pidió entrar sin clave. Basta con poner SITE_PASSWORD en Vercel (y
+    // redesplegar) para que la app vuelva a pedirla.
+    return process.env.VERCEL ? USUARIO_UNICO : USUARIO_DEV
   }
 
   const id = leerToken(getCookie(req, COOKIE))
@@ -169,9 +170,6 @@ export function usuarioDe(req) {
 // Guard para los endpoints. Devuelve el usuario, no solo un sí/no, porque
 // todo lo que se escribe necesita saber quién actúa.
 export function requireUser(req) {
-  if (modoAcceso() === 'abierto' && process.env.VERCEL) {
-    return { ok: false, status: 503, error: 'Acceso no configurado (falta USUARIOS o SITE_PASSWORD)' }
-  }
   const usuario = usuarioDe(req)
   if (!usuario) return { ok: false, status: 401, error: 'No autenticado' }
   return { ok: true, usuario }
